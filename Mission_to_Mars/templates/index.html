@@ -1,37 +1,5 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Mars Data</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
-
-<body>
-  <div class="container">
-
-    <div class="jumbotron text-center">
-      <h1>Mars Data</h1>
-      <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Get latest news about Mars!</a></p>
-    </div>
-
-    Mars Data -->
-    <!-- <div class="row" id="craiglist-listings">
-      <div class="col-md-12">
-        <h4 class="heading">{{listings.news_title}} {{listings.news_p}}</h4>
-        <small>{{listings.title}}</small>
-      </div>
-    </div>
-
-  </div>
-</body>
-
-</html> -->
-
 <!DOCTYPE html>
-<html>
+<html lang='en'>
 
 <head>
     <meta charset="utf-8" />
@@ -49,7 +17,7 @@
     <div class="container">
 
         <!-- Jumbotron -->
-        <div class="jumbotron text-center" style="background-image: url(https://cdn.theatlantic.com/static/mt/assets/science/0831Pic.jpg); background-size: 100%; height: 100%;">
+        <div class="jumbotron text-center"; background-size: 100%; height: 100%;>
             <h1 class="display-4">Mission to Mars</h1>
             <a class="btn btn-lg text-white" style="background-color:blue;" href="/scrape" role="button">Scrape New
                 Data</a>
@@ -58,8 +26,8 @@
         <!-- News Section -->
         <div class="container">
             <h3>Latest Mars News</h3>
-            <h6 style="color: #c1440e">{{ listings.news_title }}</h6>
-            <p>{{ listings.news_paragraph }}</p>
+            <h6 style="color: #c1440e">{{listings.news_title[0]}}</h6>
+            <p>{{listings.news_p[0]}}</p>
         </div>
 
         <div class="container">
@@ -67,14 +35,14 @@
                 <!-- Left Image-->
                 <div class="col-lg-8 col-md-8 col-sm-12">
                     <h3>Featured Mars Image</h3>
-                    <img src="{{ listings.featured_image_url }}" style="max-width:100%; max-height: auto;" alt="Mars Featured Image">
+                    <img src="{{listings.image_url}}" style="max-width:100%; max-height: auto;" alt="Mars Featured Image">
                 </div>
 
                     <!-- Table -->
                     <br>
                     <h3>Mars Facts</h3>
                     <div style="max-width: 450px; max-height: 150px; font-size: 15px; margin-bottom: 65px;">
-                        {{ listings.mars_facts|safe}}
+                        {{listings.mars_table[0] | safe}}
                     </div>
                 </div> <!-- col4 -->
             </div><!-- Row -->
@@ -86,18 +54,17 @@
             <hr>
             <div class="col-md-12">
                 <div class="row">
-                    listings.append({"news_title": news_title})
-                    listings.append({"news_p": news_p})
-                    listings.append({"image_url": image_url})
+                    {% for item in listings.hemisphere_list %}
                     <div class="col-md-6">
-                        <div class="card text-white bg-white" style="margin: 30px;">
-                            <img class="card-img-top" src="{{ listings.full_img }}" />
-                            <div class="card-body">
-                                <p class="card-text">{{ listings.title }}</p>
-                            </div>
+                        <div class="card text-white bg-dark" style="margin: 30px;"></div>
+                            <img class="card-img-top" src="{{item.full_img }}" />
+                            <div class="card-body"></div>
+                                <p class="card-text">{{ item.title | safe }}</p>
                         </div>
-                    </div>
+                    </div>      
+                    {% endfor %}
                 </div>
+            
             </div>
         </div><!-- Close main container -->
 

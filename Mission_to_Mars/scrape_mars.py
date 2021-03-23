@@ -5,57 +5,66 @@ import requests
 import pymongo
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
+import time 
 
 def init_browser():    
     executable_path = {'executable_path': ChromeDriverManager().install()}
-    return Browser('chrome', **executable_path, headless=False)
+    browser = Browser('chrome', **executable_path, headless=False)
+    return browser
 
 def scrape():
 
-    mars_info = []
-
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
+    browser = init_browser()
 
     #scrape Nasa site for first headline
     #---------------------------------------#
     #URL of page to be scraped
     url = 'https://mars.nasa.gov/news/'
     browser.visit(url)
+    time.sleep(1)
 
     # HTML object
     html = browser.html
     # Parse HTML with Beautiful Soup
     soup = bs(html, 'html.parser')
+
     # Retrieve all elements that contain header information
     headers = soup.find_all('div', class_='content_title')
     paragraphs = soup.find_all('div', class_='article_teaser_body')
 
     news_title = headers[1].text
-    news_p = paragraphs[1].text
+    news_p = paragraphs[0].text
+    
+    #quit browser
+    browser.quit() 
 
 
     #--------MARS Image Scrape--------------#
 
     #URL of page to be scraped
+    browser = init_browser()
     url = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/index.html'
     browser.visit(url)
+    time.sleep(1)
 
     browser.links.find_by_partial_text('FULL IMAGE').click()
 
     html = browser.html
-    # Parse HTML with Beautiful Soup
-    soup = bs(html, 'html.parser')
+    soup = bs(html,'html.parser')
 
-    mar_img = soup.find_all('img', class_='fancybox-image')
 
-    mars_image = mar_img[0]["src"]
+    results = soup.find('img', class_='fancybox-image')['src']
 
-    base_url = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/'
 
-    image_url = base_url + mars_image
+    image_url = f'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/{results}'
+
+    #quit browser
+    browser.quit() 
+
 
     #--------MARS Facts--------------#
+
+    browser = init_browser()
 
     #facts url
     facts_url = 'http://space-facts.com/mars/'
@@ -69,8 +78,6 @@ def scrape():
     # Assign the columns `['Description', 'Value']`
     mars_df.columns = ['Description','Values']
 
-    # Set the index to the `Description` column without row indexing
-    # mars_df.set_index('Description', inplace=True)
 
     # Save html code to folder Assets
     marshtml = mars_df.to_html(index=False)
@@ -123,15 +130,15 @@ def scrape():
         #Append into a list of dictionaries
         listings.append({"title": title, "full_img": full_img})
     
-    #append the rest of mars data
-    listings.append({"news_title": news_title})
-    listings.append({"news_p": news_p})
-    listings.append({"image_url": image_url})
-
-        
-    # printing result 
-    # listings = str(results)
-
-    return listings
+   
     
     browser.quit()
+
+    mars_dict = {}
+    mars_dict['news_title'] = news_title,
+    mars_dict['news_p'] = news_p,
+    mars_dict['image_url'] = image_url,
+    mars_dict['mars_table'] = marshtml,
+    mars_dict['hemisphere_list'] = listings
+
+    return mars_dict
