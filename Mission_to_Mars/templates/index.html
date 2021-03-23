@@ -53,19 +53,17 @@
     </div>
     </br>
     <div class="row">       
-        {% for item in listings.hemisphere_list %} 
-              <div class="col-6 border">
-              </br>
-                    <div>
-                      <img width="512 px" height="512 px" src="{{item.full_img }}">
-                    </div>
-
-                    <div>
-                      <h4> {{ item.title | safe }} </h4>  
-                    </div>
-            
-              </div>
-            {% endfor %}
+        {% for item in listings.hemisphere_list %}
+            <div class="col-6" border>
+            </br>
+                <div>
+                    <img width="512 px" height="512 px" src="{{item.full_img }}">
+                </div>
+                <div>
+                    <p class="card-text">{{ item.title | safe }}</p>
+                </div>
+        </div>      
+        {% endfor %}
     </div> 
 
   <hr>
