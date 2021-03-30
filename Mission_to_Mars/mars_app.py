@@ -14,8 +14,6 @@ app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://localhost:27017/mars_db"
 mongo = PyMongo(app)
 
-print(list(mongo.db.listings.find_one()))
-
 # Set route
 @app.route('/')
 def index():
@@ -36,3 +34,15 @@ def scraper():
 
 if __name__ == "__main__":
     app.run(debug=True)
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
